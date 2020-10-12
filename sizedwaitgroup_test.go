@@ -2,8 +2,10 @@ package sizedwaitgroup
 
 import (
 	"context"
+	"fmt"
 	"sync/atomic"
 	"testing"
+	"time"
 )
 
 func TestWait(t *testing.T) {
@@ -82,4 +84,16 @@ func TestAddWithContext(t *testing.T) {
 		t.Fatalf("AddContext returned non-context.Canceled error: %v", err)
 	}
 
+}
+
+func TestRun(t *testing.T) {
+	swg := New(3)
+	for i := 0; i < 1000; i++ {
+		swg.Add()
+		swg.Run(func() {
+			fmt.Println("dd", i)
+			time.Sleep(time.Second * 1)
+		})
+	}
+	swg.Wait()
 }

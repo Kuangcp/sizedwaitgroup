@@ -82,3 +82,10 @@ func (s *SizedWaitGroup) Done() {
 func (s *SizedWaitGroup) Wait() {
 	s.wg.Wait()
 }
+
+func (s *SizedWaitGroup) Run(action func()) {
+	go func() {
+		defer s.Done()
+		action()
+	}()
+}
