@@ -3,6 +3,7 @@ package sizedwaitgroup
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -87,13 +88,21 @@ func TestAddWithContext(t *testing.T) {
 }
 
 func TestRun(t *testing.T) {
+	var size int64 = 3
+	var loop int64 = 12
+	start := time.Now().Unix()
 	swg := New(3)
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < 12; i++ {
+		index := strconv.Itoa(i)
 		swg.Add()
 		swg.Run(func() {
-			fmt.Println("dd", i)
+			fmt.Println("run", index)
 			time.Sleep(time.Second * 1)
 		})
 	}
 	swg.Wait()
+	end := time.Now().Unix()
+	if end-start < loop/size {
+		t.Fatal("Not sleep enough time")
+	}
 }
