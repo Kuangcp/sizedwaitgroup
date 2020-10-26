@@ -91,12 +91,11 @@ func TestRun(t *testing.T) {
 	var size int64 = 3
 	var loop int64 = 12
 	start := time.Now().Unix()
-	swg := New(3)
+	swg := NewWithName(3, "sleep-group")
 	for i := 0; i < 12; i++ {
 		index := strconv.Itoa(i)
-		swg.Add()
 		swg.Run(func() {
-			fmt.Println("run", index)
+			fmt.Println(swg.Name, "run", index)
 			time.Sleep(time.Second * 1)
 		})
 	}
