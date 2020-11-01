@@ -10,7 +10,7 @@ import (
 )
 
 func TestWait(t *testing.T) {
-	swg := New(10)
+	swg, _ := New(10)
 	var c uint32
 
 	for i := 0; i < 10000; i++ {
@@ -31,7 +31,7 @@ func TestWait(t *testing.T) {
 func TestThrottling(t *testing.T) {
 	var c uint32
 
-	swg := New(4)
+	swg, _ := New(4)
 
 	if len(swg.current) != 0 {
 		t.Fatalf("the SizedWaitGroup should start with zero.")
@@ -54,7 +54,7 @@ func TestThrottling(t *testing.T) {
 
 func TestNoThrottling(t *testing.T) {
 	var c uint32
-	swg := New(0)
+	swg, _ := New(0)
 	if len(swg.current) != 0 {
 		t.Fatalf("the SizedWaitGroup should start with zero.")
 	}
@@ -74,7 +74,7 @@ func TestNoThrottling(t *testing.T) {
 func TestAddWithContext(t *testing.T) {
 	ctx, cancelFunc := context.WithCancel(context.TODO())
 
-	swg := New(1)
+	swg, _ := New(1)
 
 	if err := swg.AddWithContext(ctx); err != nil {
 		t.Fatalf("AddContext returned error: %v", err)
@@ -91,7 +91,7 @@ func TestRun(t *testing.T) {
 	var size int64 = 3
 	var loop int64 = 12
 	start := time.Now().Unix()
-	swg := NewWithName(3, "sleep-group")
+	swg, _ := NewWithName(3, "sleep-group")
 	for i := 0; i < 12; i++ {
 		index := strconv.Itoa(i)
 		swg.Run(func() {

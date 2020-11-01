@@ -11,7 +11,7 @@ package sizedwaitgroup
 
 import (
 	"context"
-	"math"
+	"fmt"
 	"sync"
 )
 
@@ -28,22 +28,21 @@ type SizedWaitGroup struct {
 // New creates a SizedWaitGroup.
 // The limit parameter is the maximum amount of
 // goroutines which can be started concurrently.
-func New(limit int) SizedWaitGroup {
+func New(limit int) (*SizedWaitGroup, error) {
 	return NewWithName(limit, "")
 }
 
-func NewWithName(limit int, name string) SizedWaitGroup {
-	size := math.MaxInt32 // 2^32 - 1
-	if limit > 0 {
-		size = limit
+func NewWithName(limit int, name string) (*SizedWaitGroup, error) {
+	if limit <= 0 {
+		return nil, fmt.Errorf("limit must great than 0")
 	}
-	return SizedWaitGroup{
-		Size: size,
-		Name: name,
 
-		current: make(chan struct{}, size),
+	return &SizedWaitGroup{
+		Size:    limit,
+		Name:    name,
+		current: make(chan struct{}, limit),
 		wg:      sync.WaitGroup{},
-	}
+	}, nil
 }
 
 // Add increments the internal WaitGroup counter.
