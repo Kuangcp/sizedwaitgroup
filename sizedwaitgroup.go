@@ -51,8 +51,8 @@ func NewWithName(limit int, name string) (*SizedWaitGroup, error) {
 // been called.
 //
 // See sync.WaitGroup documentation for more information.
-func (s *SizedWaitGroup) Add() {
-	s.AddWithContext(context.Background())
+func (s *SizedWaitGroup) Add() error {
+	return s.AddWithContext(context.Background())
 }
 
 // AddWithContext increments the internal WaitGroup counter.
@@ -87,8 +87,12 @@ func (s *SizedWaitGroup) Wait() {
 	s.wg.Wait()
 }
 
+// Run one function, around with Add and Done
 func (s *SizedWaitGroup) Run(action func()) {
-	s.Add()
+	err := s.Add()
+	if err != nil {
+		return
+	}
 	go func() {
 		defer s.Done()
 		action()

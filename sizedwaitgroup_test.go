@@ -84,7 +84,6 @@ func TestAddWithContext(t *testing.T) {
 	if err := swg.AddWithContext(ctx); err != context.Canceled {
 		t.Fatalf("AddContext returned non-context.Canceled error: %v", err)
 	}
-
 }
 
 func TestRun(t *testing.T) {
